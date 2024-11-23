@@ -1,0 +1,31 @@
+# 使用官方的Python 3基础镜像
+FROM python:3.9-slim
+
+# 设置工作目录
+WORKDIR /
+
+# 复制项目的依赖文件到工作目录
+COPY requirements.txt .
+
+# 安装Python依赖
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 假设Flask和Flask-MySQLdb（或Flask-SQLAlchemy等）在requirements.txt中
+# 确保requirements.txt包含类似以下行：
+# Flask==2.0.1  # 或更高版本，确保与Python 3兼容
+# Flask-MySQLdb  # 或 Flask-SQLAlchemy + pymysql
+# bootstrap4  # 如果你使用的是Bootstrap 4的Python包（通常Bootstrap是通过HTML/CSS直接引入的）
+
+# 复制项目文件到工作目录
+COPY . .
+
+# 暴露Flask应用运行的端口（默认是5000）
+EXPOSE 5000
+
+# 设置容器启动时执行的命令
+# 注意：这里假设你的Flask应用是通过app.py中的app.run()启动的
+# 并且没有使用像Gunicorn这样的WSGI服务器（在生产环境中通常建议使用）
+CMD ["python", "app.py"]
+
+# 注意：关于MySQL的部分，通常你会在另一个Docker容器中运行MySQL服务
+# 并在Flask应用中配置数据库连接字符串，指向该MySQL容器的地址和端口
